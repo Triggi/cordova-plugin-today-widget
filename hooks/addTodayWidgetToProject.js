@@ -316,11 +316,11 @@ module.exports = function (context) {
         'NotificationCenter.framework',
         { target: target.uuid }
       );
-      var frameworkFile2 = pbxProject.addFramework('libCordova.a', {
-        target: target.uuid,
-      }); // seems to work because the first target is built before the second one
+      var frameworkFile2 = pbxProject.addFramework('libCordova.a'); // seems to work because the first target is built before the second one
       if (frameworkFile1 && frameworkFile2) {
         log('Successfully added frameworks needed by the widget!', 'info');
+      } else {
+        log('Could not add framework file!', 'error')
       }
 
       // Add a new PBXResourcesBuildPhase for the Resources used by the widget (MainInterface.storyboard)
