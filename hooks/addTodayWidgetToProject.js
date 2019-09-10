@@ -313,12 +313,28 @@ module.exports = function (context) {
       }
 
       // Add the frameworks needed by our widget, add them to the existing Frameworks PbxGroup and PBXFrameworksBuildPhase
-      var frameworkFile1 = pbxProject.addFramework(
+      var notificationFramework = pbxProject.addFramework(
         'NotificationCenter.framework',
         { target: target.uuid }
       );
-      var frameworkFile2 = pbxProject.addFramework('libCordova.a', { target: target.uuid }); // seems to work because the first target is built before the second one
-      if (frameworkFile1 && frameworkFile2) {
+
+      var originalFrameworkFile = pbxProject.hasFile('libCordova.a');
+      console.log(originalFrameworkFile);
+
+      var frameworkFileRef = originalFrameworkFile.fileRef;
+      console.log(frameworkFileRef);
+
+      var frameworkFile = new pbxFile('libCordova', { target: target.uuid });
+      frameworkFile.uuid = pbxProject.generateUuid();
+      frameworkFile.fileRef = frameworkFileRef;
+      frameworkFile.target = target.uuid;
+
+      pbxProject.addToPbxBuildFileSection(frameworkFile);        // PBXBuildFile
+      pbxProject.addToPbxFileReferenceSection(frameworkFile);    // PBXFileReference
+      pbxProject.addToFrameworksPbxGroup(frameworkFile);         // PBXGroup
+      pbxProject.addToPbxFrameworksBuildPhase(frameworkFile);    // PBXFrameworksBuildPhase
+
+      if (notificationFramework && frameworkFile) {
         log('Successfully added frameworks needed by the widget!', 'info');
       } else {
         log('Could not add framework file!', 'error')
