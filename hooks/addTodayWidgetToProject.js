@@ -318,16 +318,7 @@ module.exports = function (context) {
         { target: target.uuid }
       );
 
-      var originalFrameworkFile = pbxProject.hasFile('libCordova.a');
-      console.log(originalFrameworkFile);
-
-      var frameworkFileRef = originalFrameworkFile.fileRef;
-      console.log(frameworkFileRef);
-
-      var frameworkFile = new xcode.project.pbxFile('libCordova.a', { target: target.uuid });
-      frameworkFile.uuid = pbxProject.generateUuid();
-      frameworkFile.fileRef = frameworkFileRef;
-      frameworkFile.target = target.uuid;
+      var frameworkFile = pbxProject.addCopyfile('libCordova.a', { target: target.uuid });
 
       pbxProject.addToPbxBuildFileSection(frameworkFile);        // PBXBuildFile
       pbxProject.addToPbxFileReferenceSection(frameworkFile);    // PBXFileReference
